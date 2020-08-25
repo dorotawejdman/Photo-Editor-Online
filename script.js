@@ -6,19 +6,33 @@ const ctx1 = canvas1.getContext('2d')
 const reader = new FileReader();
 const img = new Image();
 const max_width = 500;
+const max_height = 500;
+
+//funkcja wywolywana po wgraniu obrazu do strony
 const uploadImage = (e) => {
     reader.onload = () => {
         img.onload = () =>{
-            console.log(canvas.width)
-            if (img.width>max_width){
-                
-                canvas.width = max_width//img.width/5;
-                canvas.height = max_width*img.height/img.width;
+            if(img.width<img.height){
+                if (img.height>max_height){
+                    canvas.height = max_height;
+                    canvas.width = max_height*img.width/img.height;
+                }
+                else{
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                }
             }
             else{
-                canvas.width = img.width;
-                canvas.height = img.height;
+                if (img.width>max_width){
+                    canvas.width = max_width//img.width/5;
+                    canvas.height = max_width*img.height/img.width;
+                }
+                else{
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                }
             }
+            
             canvas1.height = canvas.height;
             canvas1.width = canvas.width;
             ctx.drawImage(img,0,0,canvas.width,canvas.height)
@@ -30,9 +44,8 @@ const uploadImage = (e) => {
     console.log(reader)
 }
 
-
+//Jezeli nastapi zmiana w elemencie typu input z #uploader to wywoła funkcje uploadImage
 const imageLoader = document.getElementById('uploader')
-
 imageLoader.addEventListener('change',uploadImage)
 
 const greyscale = () => {
