@@ -48,15 +48,15 @@ const uploadImage = (e) => {
 const imageLoader = document.getElementById('uploader')
 imageLoader.addEventListener('change',uploadImage)
 
-const greyscale = () => {
+const grayscale = () => {
     const imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
     const data = imageData.data
 
     for(let i=0; i<data.length; i+=4 ){
-        const grey = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
-        data[i] = grey;
-        data[i+1] = grey;
-        data[i+2] = grey;
+        const gray = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
+        data[i] = gray;
+        data[i+1] = gray;
+        data[i+2] = gray;
     }
 
     ctx.putImageData(imageData,0,0);
@@ -67,10 +67,10 @@ const sepia = () => {
     const data = imageData.data
 
     for(let i=0; i<data.length; i+=4 ){
-        const grey = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
-        data[i] = grey + 95;
-        data[i+1] = grey + 58 ;
-        data[i+2] = grey;
+        const gray = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
+        data[i] = gray + 95;
+        data[i+1] = gray + 58 ;
+        data[i+2] = gray;
     }
 
     ctx.putImageData(imageData,0,0);
@@ -108,8 +108,8 @@ const binary = () => {
     const data = imageData.data
 
     for(let i=0; i<data.length; i+=4 ){
-        const grey = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
-        if(grey>125){
+        const gray = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
+        if(gray>125){
             data[i]=data[i+1]=data[i+2]=255
         }
         else{
@@ -120,16 +120,60 @@ const binary = () => {
     ctx.putImageData(imageData,0,0);
 }
 
+const saturate = () => {
+    const imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
+    const data = imageData.data
+
+    for(let i=0; i<data.length; i+=4 ){
+        const mul=2;
+        data[i] = data[i]*mul;
+        data[i+1] = data[i+1]*mul;
+        data[i+2] = data[i+2]*mul;
+        
+    }
+
+    ctx.putImageData(imageData,0,0);
+}
+const darken = () => {
+    const imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
+    const data = imageData.data
+
+    for(let i=0; i<data.length; i+=4 ){
+        data[i] = (data[i] + 40)/295*255;
+        data[i+1] = (data[i+1] + 40)/295*255
+        data[i+2] = (data[i+2] + 40)/295*255
+
+    }
+
+    ctx.putImageData(imageData,0,0);
+}
+const brighten = () => {
+    const imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
+    const data = imageData.data
+
+    for(let i=0; i<data.length; i+=4 ){
+        data[i] = (data[i] - 40)/215*255;
+        data[i+1] = (data[i+1] - 40)/215*255
+        data[i+2] = (data[i+2] - 40)/215*255
+
+    }
+
+    ctx.putImageData(imageData,0,0);
+}
+
 const clear = () => {
     img.src = reader.result;
 }
 
-document.querySelectorAll('button')[0].addEventListener('click',greyscale);
+document.querySelectorAll('button')[0].addEventListener('click',grayscale);
 document.querySelectorAll('button')[1].addEventListener('click',sepia);
 document.querySelectorAll('button')[2].addEventListener('click',invert);
 document.querySelectorAll('button')[3].addEventListener('click',rgb2bgr);
 document.querySelectorAll('button')[4].addEventListener('click',binary);
-document.querySelectorAll('button')[5].addEventListener('click',clear);
+document.querySelectorAll('button')[5].addEventListener('click',saturate);
+document.querySelectorAll('button')[6].addEventListener('click',brighten);
+document.querySelectorAll('button')[7].addEventListener('click',darken);
+document.querySelectorAll('button')[8].addEventListener('click',clear);
 
 
 
