@@ -7,6 +7,7 @@ const reader = new FileReader();
 const img = new Image();
 const max_width = 500;
 const max_height = 500;
+let value = null;
 
 //funkcja wywolywana po wgraniu obrazu do strony
 const uploadImage = (e) => {
@@ -47,6 +48,11 @@ const uploadImage = (e) => {
 //Jezeli nastapi zmiana w elemencie typu input z #uploader to wywoła funkcje uploadImage
 const imageLoader = document.getElementById('uploader')
 imageLoader.addEventListener('change',uploadImage)
+
+const setNumVal = () => {
+    value = document.getElementById('input-num').value;
+    console.log(value)
+}
 
 const grayscale = () => {
     const imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
@@ -109,7 +115,9 @@ const binary = () => {
 
     for(let i=0; i<data.length; i+=4 ){
         const gray = data[i]*0.21 + data[i+1]*0.71 + data[i+2]*0.07;
-        if(gray>125){
+        let thresh = 120;
+        if(value!=null) thresh = value;
+        if(gray>thresh){
             data[i]=data[i+1]=data[i+2]=255
         }
         else{
@@ -125,7 +133,8 @@ const saturate = () => {
     const data = imageData.data
 
     for(let i=0; i<data.length; i+=4 ){
-        const mul=2;
+        let mul=2;
+        if(value!=null) mul = value;
         data[i] = data[i]*mul;
         data[i+1] = data[i+1]*mul;
         data[i+2] = data[i+2]*mul;
@@ -137,11 +146,13 @@ const saturate = () => {
 const darken = () => {
     const imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
     const data = imageData.data
-
+    document.querySelector('h1').innerHTML = "'Set the multiplier:'"
     for(let i=0; i<data.length; i+=4 ){
-        data[i] = (data[i] + 40)/295*255;
-        data[i+1] = (data[i+1] + 40)/295*255
-        data[i+2] = (data[i+2] + 40)/295*255
+        let num = 40;
+        if(value!=null) num = value;
+        data[i] = (data[i] + num)/(255+num)*255;
+        data[i+1] = (data[i+1] + num)/(255+num)*255
+        data[i+2] = (data[i+2] + num)/(255+num)*255
 
     }
 
@@ -152,9 +163,11 @@ const brighten = () => {
     const data = imageData.data
 
     for(let i=0; i<data.length; i+=4 ){
-        data[i] = (data[i] - 40)/215*255;
-        data[i+1] = (data[i+1] - 40)/215*255
-        data[i+2] = (data[i+2] - 40)/215*255
+        let num = 40;
+        if(value!=null) num = value;
+        data[i] = (data[i] - num)/(255-num)*255;
+        data[i+1] = (data[i+1] - num)/(255-num)*255
+        data[i+2] = (data[i+2] - num)/(255-num)*255
 
     }
 
@@ -165,6 +178,8 @@ const clear = () => {
     img.src = reader.result;
 }
 
+//document.getElementById('input-meaning').innerHTML = 'Set the multiplier:'
+
 document.querySelectorAll('button')[0].addEventListener('click',grayscale);
 document.querySelectorAll('button')[1].addEventListener('click',sepia);
 document.querySelectorAll('button')[2].addEventListener('click',invert);
@@ -174,6 +189,21 @@ document.querySelectorAll('button')[5].addEventListener('click',saturate);
 document.querySelectorAll('button')[6].addEventListener('click',brighten);
 document.querySelectorAll('button')[7].addEventListener('click',darken);
 document.querySelectorAll('button')[8].addEventListener('click',clear);
+
+document.querySelectorAll('button')[4].addEventListener('mouseover',() => {
+    document.getElementById('input-meaning').innerHTML = "Set the binary threshold:"
+});
+document.querySelectorAll('button')[5].addEventListener('mouseover',() => {
+    document.getElementById('input-meaning').innerHTML = "Set enhancement level:"
+});
+document.querySelectorAll('button')[6].addEventListener('mouseover',() => {
+    document.getElementById('input-meaning').innerHTML = "Set brighten level:"
+});
+document.querySelectorAll('button')[7].addEventListener('mouseover',() => {
+    document.getElementById('input-meaning').innerHTML = "Set darken level:"
+});
+
+document.getElementById('input-num').addEventListener('change',setNumVal)
 
 
 
