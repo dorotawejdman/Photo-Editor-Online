@@ -9,4 +9,6 @@ You can:
 * darken ora brighten it
 * increase the saturation
 
-Check this out here -> [link](https://photo-editor-by-dw.netlify.app/)
+App was made with: HTML, CSS & JavaScript.
+
+**Check this out here -> [Photo Editor App](https://photo-editor-by-dw.netlify.app/)**
